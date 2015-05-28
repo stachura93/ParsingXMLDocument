@@ -2,7 +2,7 @@
     <wb-module deploy-name="Servlet-JDBC-JS---XML">
         <wb-resource deploy-path="/" source-path="/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="CRUD"/>
         <property name="java-output-path" value="/Servlet-JDBC-JS---XML/build/classes"/>
+        <property name="context-root" value="XML"/>
     </wb-module>
 </project-modules>

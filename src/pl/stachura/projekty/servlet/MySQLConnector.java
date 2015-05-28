@@ -40,7 +40,7 @@ public class MySQLConnector {
     }
     
     public static void main(String[] args) {
-    	File file = new File("test1.xml");
-    	JAXBContext jaxbContext = JAXBContext.newInstance(classesToBeBound)
+   
+   
 	}
 }
