@@ -1,16 +1,13 @@
-package pl.stachura.projekty.servlet;
+package pl.stachura.projekty.jdbc;
 
-
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.xml.bind.JAXBContext;
-
+import com.mysql.jdbc.Statement;
 
 public class MySQLConnector {
-	
     private static MySQLConnector instance = new MySQLConnector();
     public static final String URL = "jdbc:mysql://localhost:3306/Test";
     public static final String USER = "root";
@@ -39,8 +36,25 @@ public class MySQLConnector {
         return instance.createConnection();
     }
     
+    
+    
+    
     public static void main(String[] args) {
-   
-   
+    	String QUERY = "select name,surname,login from USER";
+    	
+    	//using try-with-resources to avoid closing resources (boiler plate code)
+        try(Connection con = MySQLConnector.getConnection();
+                Statement stmt = (Statement) con.createStatement();
+                ResultSet rs = stmt.executeQuery(QUERY)) {  
+             
+            while(rs.next()){
+                String name = rs.getString("name");
+                String surname = rs.getString("surname");
+                String login = rs.getString("login");
+                System.out.println(name + ", " +surname+ ", " + login);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 	}
 }
