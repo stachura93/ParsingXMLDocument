@@ -3,7 +3,6 @@ function sayInformationAboutAuthor() {
 	alert("author: Stachura Bartlomiej")
 }
 
-
 $(function() {
 	  $.extend($.tablesorter.themes.ice, {
 		  
