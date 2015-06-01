@@ -37,8 +37,6 @@ public class MySQLConnector {
     }
     
     
-    
-    
     public static void main(String[] args) {
     	String QUERY = "select name,surname,login from USER";
     	
