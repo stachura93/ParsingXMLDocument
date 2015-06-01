@@ -2,12 +2,12 @@ package pl.stachura.projekty.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,24 +39,27 @@ public class HelloSite extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		PrintWriter printWriter =  resp.getWriter();
+
 		StringBuilder pageBuilder = new StringBuilder();
-
-	
-		resp.setContentType("text/html");
-		
-		pageBuilder.append("<!DOCTYPE html>");
-		pageBuilder.append("<HTML><HEAD>");
-		pageBuilder.append("<TITLE>Wyniki z formularza</TITLE>");
-
-		ITable table = new Table();
-		String includeLink = table.getAllScriptAndStylesheet();
-		pageBuilder.append(includeLink);
-		
-		pageBuilder.append("</HEAD><BODY>");
-		
-	
+		ServletOutputStream out = null;
+		try {
+		    
+			
+			pageBuilder.append("<!DOCTYPE html>");
+			pageBuilder.append("<HTML><HEAD>");
+			pageBuilder.append("<TITLE>Wyniki z formularza</TITLE>");
+			
+			ITable table = new Table();
+			String includeLink = table.getAllScriptAndStylesheet();
+			pageBuilder.append(includeLink);
+			
+			pageBuilder.append("</HEAD><BODY>");
+			
+			
+			
+			
+			
+			
 		ArrayList<String> name = new ArrayList<String>();
 		ArrayList<String> surname = new ArrayList<String>();
 		ArrayList<String> login = new ArrayList<String>();
@@ -85,14 +88,36 @@ public class HelloSite extends HttpServlet {
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
+			
+			
+		 
+		   	byte[] bytes = pageBuilder.toString().getBytes();
+		    resp.setContentType("text/html");
+		    resp.setContentLength(bytes.length);
+		    
+		    out = resp.getOutputStream();
+		    out.write(bytes, 0, bytes.length);
+		} catch (Exception e) {
+		    e.printStackTrace();
+		} finally {
+		    out.flush();
+		    out.close();
+		}
+		
+	
+	
 		
 		
-				
-		pageBuilder.append("</BODY></HTML>");
 		
-		printWriter.print(pageBuilder.toString());
-		printWriter.flush();
-		printWriter.close();
+		
+		
+		
+	
+		
+		
+//				
+//		printWriter.flush();
+//		printWriter.close();
 }
 
 

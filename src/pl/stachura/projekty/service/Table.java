@@ -10,19 +10,6 @@ public class Table implements ITable {
 			HashMap<String, ArrayList<String>> tHeadAndTBody) {
 		HashMap<String, ArrayList<String>> copyTheadAndTBody = tHeadAndTBody;
 
-		   byte[] bytes = "hello world".getBytes();
-		    res.setContentType("text/html");
-		    res.setContentLength(bytes.length);
-		    out = res.getOutputStream();
-		    out.write(bytes, 0, bytes.length);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		} finally {
-		    out.flush();
-		    out.close();
-		
-		
-		
 		StringBuilder createTable = new StringBuilder();
 		createTable.append("<table id=\"tableSorter\" class=\"display\">").append(
 				WebFormat.NEW_LINE);
