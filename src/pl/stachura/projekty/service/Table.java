@@ -10,8 +10,21 @@ public class Table implements ITable {
 			HashMap<String, ArrayList<String>> tHeadAndTBody) {
 		HashMap<String, ArrayList<String>> copyTheadAndTBody = tHeadAndTBody;
 
+		   byte[] bytes = "hello world".getBytes();
+		    res.setContentType("text/html");
+		    res.setContentLength(bytes.length);
+		    out = res.getOutputStream();
+		    out.write(bytes, 0, bytes.length);
+		} catch (Exception e) {
+		    e.printStackTrace();
+		} finally {
+		    out.flush();
+		    out.close();
+		
+		
+		
 		StringBuilder createTable = new StringBuilder();
-		createTable.append("<table class=\"tablesorter\">").append(
+		createTable.append("<table id=\"tableSorter\" class=\"display\">").append(
 				WebFormat.NEW_LINE);
 		createTable.append("<thead>").append(WebFormat.NEW_LINE);
 		createTable.append("<tr>").append(WebFormat.NEW_LINE);
@@ -22,18 +35,25 @@ public class Table implements ITable {
 		createTable.append("</tr>").append(WebFormat.NEW_LINE);
 		createTable.append("</thead>").append(WebFormat.NEW_LINE);
 		createTable.append("<tbody>").append(WebFormat.NEW_LINE);
-
-		for (int i = 0; i < copyTheadAndTBody.values().size(); i++) {
+		 
+		int listLength =0;
+		for (ArrayList<String> iterable_element : copyTheadAndTBody.values()) {
+			if(iterable_element.size() > listLength)
+				listLength = iterable_element.size();
+		}	
+		
+		for (int i = 0; i < listLength; i++) {
 			createTable.append("<tr>").append(WebFormat.NEW_LINE);
 			for (ArrayList<String> string : copyTheadAndTBody.values()) {
 				createTable.append("<td>" + string.get(i) + " </td>").append(
 						WebFormat.NEW_LINE);
 			}
 			createTable.append("</tr>").append(WebFormat.NEW_LINE);
-		}
+		}		
 
 		createTable.append("</tbody>").append(WebFormat.NEW_LINE);
 		createTable.append("</table>").append(WebFormat.NEW_LINE);
+		copyTheadAndTBody = null;
 		return createTable.toString();
 	}
 
@@ -42,23 +62,16 @@ public class Table implements ITable {
 		StringBuilder link = new StringBuilder();
 
 		link.append(
-				"<link rel=\"stylesheet\" href=\"webjars/tablesorter/2.15.5/css/theme.jui.css\">")
+				"<script src=\"webjars/jquery/2.1.3/jquery.js\"></script>")
+				.append(WebFormat.NEW_LINE);
+		
+		link.append(
+				"<link rel=\"stylesheet\" href=\"webjars/datatables/1.10.6/css/jquery.dataTables.css\">")
 				.append(WebFormat.NEW_LINE);
 		link.append(
-				"<link rel=\"stylesheet\" href=\"webjars/jquery-ui/1.11.3/jquery-ui.min.css\">")
+				"<script src=\"webjars/datatables/1.10.6/js/jquery.dataTables.js\"></script>")
 				.append(WebFormat.NEW_LINE);
-		link.append(
-				"<script src=\"webjars/jquery/2.1.3/jquery.min.js\"></script>")
-				.append(WebFormat.NEW_LINE);
-		link.append(
-				"<script src=\"webjars/tablesorter/2.15.5/js/jquery.tablesorter.min.js\"></script>")
-				.append(WebFormat.NEW_LINE);
-		link.append(
-				"<script src=\"webjars/tablesorter/2.15.5/js/jquery.tablesorter.js\"></script>")
-				.append(WebFormat.NEW_LINE);
-		link.append(
-				"<script src=\"webjars/tablesorter/2.15.5/js/jquery.tablesorter.widgets.js\"></script>")
-				.append(WebFormat.NEW_LINE);
+		
 		link.append(
 				"<script type=\"text/javascript\" src=\"js/script.js\"></script>")
 				.append(WebFormat.NEW_LINE);
