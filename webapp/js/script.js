@@ -1,11 +1,7 @@
-
 function sayInformationAboutAuthor() {
 	alert("author: Stachura Bartlomiej")
 }
 
-$(document).ready(function() 
-	    { 
-	        $("#myTable").tablesorter(); 
-	    } 
-); 
-	    
+$(document).ready(function() {
+    $('#dataTable').DataTable();
+} );
