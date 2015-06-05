@@ -1,7 +1,6 @@
 <html>
 <head>
 	<title>FreeMarker Hello World</title>
-	<link rel="stylesheet" type="text/css" href="css/loading.css">
 </head>
 <body>
 	<table class="datatable">

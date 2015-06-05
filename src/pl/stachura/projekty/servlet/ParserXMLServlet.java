@@ -1,34 +1,21 @@
 package pl.stachura.projekty.servlet;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
-import javax.servlet.RequestDispatcher;
+import javax.annotation.Generated;
+import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
-import org.xml.sax.SAXException;
+import pl.stachura.projekty.service.AplicationAsyncListener;
+import pl.stachura.projekty.service.AsyncRequestProcessor;
 
-import com.google.gson.Gson;
-
-import pl.stachura.projekty.model.Person;
-import pl.stachura.projekty.service.ReadXMLPersonSAX;
-
+@WebServlet(urlPatterns = "/ParserXMLServlet", asyncSupported = true)
 public class ParserXMLServlet extends HttpServlet {
 
 	/**
@@ -36,34 +23,81 @@ public class ParserXMLServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+		
+		long startTime = System.currentTimeMillis();
+		System.out.println("AsyncLongRunningServlet Start::Name="
+				+ Thread.currentThread().getName() + "::ID="
+				+ Thread.currentThread().getId());
 
-		SAXParser saxParser;
-		try {
-			saxParser = saxParserFactory.newSAXParser();
-			ReadXMLPersonSAX handler = new ReadXMLPersonSAX();
-			saxParser
-					.parse(new File(
-							"/Users/bartlomiejstachura/GitHub/Servlet-JDBC-JS---XML/test1.xml"),
-							handler);
+		req.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
 
-			List<Person> personsList = handler.getPersonsList();
+		String time = req.getParameter("time");
+		int secs = Integer.valueOf(time);
+		// max 10 seconds
+		if (secs > 10000)
+			secs = 10000;
 
-			req.setAttribute("person", personsList);
-			RequestDispatcher requestDispatcher = req
-					.getRequestDispatcher("WEB-INF/website/table.ftl");
-			requestDispatcher.forward(req, resp);
+		AsyncContext asyncCtx = req.startAsync();
+		asyncCtx.addListener(new AplicationAsyncListener());
+		asyncCtx.setTimeout(9000);
 
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		}
+		ThreadPoolExecutor executor = (ThreadPoolExecutor) req
+				.getServletContext().getAttribute("executor");
 
+		executor.execute(new AsyncRequestProcessor(asyncCtx, secs));
+		long endTime = System.currentTimeMillis();
+		System.out.println("AsyncLongRunningServlet End::Name="
+				+ Thread.currentThread().getName() + "::ID="
+				+ Thread.currentThread().getId() + "::Time Taken="
+				+ (endTime - startTime) + " ms.");
+		
+		
+		
+		
+		
+		  
+		
+		
+		
+		
+//		RequestDispatcher requestDispatcherLoading = req
+//				.getRequestDispatcher("WEB-INF/website/loadingSite.ftl");
+//		requestDispatcherLoading.forward(req, resp);
+//		
+//		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+//		SAXParser saxParser;
+//		try {
+//			saxParser = saxParserFactory.newSAXParser();
+//			ReadXMLPersonSAX handler = new ReadXMLPersonSAX();
+//			saxParser
+//					.parse(new File(
+//							"/Users/bartlomiejstachura/GitHub/Servlet-JDBC-JS---XML/test1.xml"),
+//							handler);
+//
+//			List<Person> personsList = handler.getPersonsList();
+//
+//			// Save to database 
+//			PersonDAO personDAO = new PersonDAO();
+//			personDAO.doDelate();
+//			personDAO.createTable();
+//			personDAO.doInsertBatch(personsList);
+//			
+//			req.setAttribute("person", personsList);
+//			RequestDispatcher requestDispatcher = req
+//					.getRequestDispatcher("WEB-INF/website/table.ftl");
+//			requestDispatcher.forward(req, resp);
+//
+//		} catch (ParserConfigurationException e) {
+//			e.printStackTrace();
+//		} catch (SAXException e) {
+//			e.printStackTrace();
+//		}
+//
 	}
 
 	public static void main(String[] args) throws TransformerException {
