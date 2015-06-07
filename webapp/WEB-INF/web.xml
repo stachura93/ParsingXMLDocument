@@ -56,10 +56,11 @@
 	<servlet>
 		<servlet-name>ParserXMLServlet</servlet-name>
 		<servlet-class>pl.stachura.projekty.servlet.ParserXMLServlet</servlet-class>
+	  	<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ParserXMLServlet</servlet-name>
-		<url-pattern>/ParserXMLServlet</url-pattern>
+		<url-pattern>/ParserXMLServlet/*</url-pattern>
 	</servlet-mapping>
 
 

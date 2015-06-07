@@ -6,7 +6,7 @@
 <body>
 	<div id="main"> 
 		<p> XML parser <p>
-		<form action="ParserXMLServlet">
+		<form action="ParserXMLServlet" method="GET">
 			<input type="submit" value="Submit">
 		</form>
 	</div>

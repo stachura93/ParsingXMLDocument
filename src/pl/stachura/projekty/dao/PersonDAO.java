@@ -91,18 +91,18 @@ public class PersonDAO implements IPerson {
 
 			final int batchSize = 1000; // We must remember about JDBC limit
 			int count = 0;
-			
+
 			for (Person person : persons) {
 				ps.setString(1, person.getName());
 				ps.setString(2, person.getSurname());
 				ps.setString(3, person.getLogin());
 				ps.addBatch();
-
 				if (++count % batchSize == 0) {
 					ps.executeBatch();
 				}
 			}
-			
+
+			ps.executeBatch();
 			ps.close();
 			con.close();
 		} catch (SQLException e) {
@@ -112,12 +112,12 @@ public class PersonDAO implements IPerson {
 
 	public static void main(String[] args) {
 		PersonDAO personDAO = new PersonDAO();
-//		personDAO.doDelate();
-//		personDAO.createTable();
-//		Person person = new Person();
-//		person.setName("Name");
-//		person.setSurname("Surname");
-//		person.setLogin("login");
+		// personDAO.doDelate();
+		// personDAO.createTable();
+		// Person person = new Person();
+		// person.setName("Name");
+		// person.setSurname("Surname");
+		// person.setLogin("login");
 
 		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 		try {
@@ -138,12 +138,12 @@ public class PersonDAO implements IPerson {
 		System.out.println("--------------");
 		System.out.println("done");
 		System.out.println("--------------");
-//		List<Person> persons = personDAO.doSelect();
-//		for (Person person2 : persons) {
-//			System.out.println(person2.getName());
-//			System.out.println(person2.getSurname());
-//			System.out.println(person2.getLogin());
-//		}
+		// List<Person> persons = personDAO.doSelect();
+		// for (Person person2 : persons) {
+		// System.out.println(person2.getName());
+		// System.out.println(person2.getSurname());
+		// System.out.println(person2.getLogin());
+		// }
 	}
 
 }

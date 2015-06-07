@@ -1,7 +1,8 @@
 package pl.stachura.projekty.model;
 
-public class Person {
 
+public class Person {
+	
 	private String name;
 	private String surname;
 	private String login;
