@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.jdt.internal.compiler.ast.JavadocQualifiedTypeReference;
 import org.xml.sax.SAXException;
 
 import pl.stachura.projekty.dao.PersonDAO;
@@ -38,6 +39,8 @@ public class ParserXMLServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		
+		
 		RequestDispatcher requestDispatcher = req
 				.getRequestDispatcher("WEB-INF/website/table.ftl");
 		requestDispatcher.forward(req, resp);
@@ -50,6 +53,16 @@ public class ParserXMLServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 	
+		String sCol = req.getParameter("iSortCol_0");
+	    String sdir = req.getParameter("sSortDir_0");
+	    
+	    if(sCol != null) {
+	    	System.out.println("wio");
+	    }
+	    if(sdir != null) {
+	    	System.out.println("wio2");
+	    }
+	    
 		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 		SAXParser saxParser;
 
