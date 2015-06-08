@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>FreeMarker Hello World</title>
+	<title>XmlParser SERVLET-JDBC-SAX-JSON</title>
 	<link rel="stylesheet" type="text/css" href="css/mainStyle.css">
 </head>
 <body>

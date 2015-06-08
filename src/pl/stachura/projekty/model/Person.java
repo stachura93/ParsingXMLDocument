@@ -1,11 +1,22 @@
 package pl.stachura.projekty.model;
 
 
-public class Person {
+public class Person  {
 	
 	private String name;
 	private String surname;
 	private String login;
+	
+	public Person() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Person(String name, String surname, String login) {
+		super();
+		this.name = name;
+		this.surname = surname;
+		this.login = login;
+	}
 
 	public String getName() {
 		return name;

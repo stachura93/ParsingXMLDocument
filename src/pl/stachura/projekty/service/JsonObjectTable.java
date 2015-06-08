@@ -5,55 +5,62 @@ import java.util.List;
 import pl.stachura.projekty.model.Person;
 
 public class JsonObjectTable {
-	 int iTotalRecords;
+	int draw;
+	int recordsTotal;
+	int recordsFiltered;
 
-	    int iTotalDisplayRecords;
+	String sEcho;
 
-	    String sEcho;
+	String sColumns;
 
-	    String sColumns;
+	List<Person> data;
 
-	    List<Person> aaData;
+	public int getDraw() {
+		return draw;
+	}
 
-		public int getiTotalRecords() {
-			return iTotalRecords;
-		}
+	public void setDraw(int draw) {
+		this.draw = draw;
+	}
 
-		public void setiTotalRecords(int iTotalRecords) {
-			this.iTotalRecords = iTotalRecords;
-		}
+	public int getRecordsTotal() {
+		return recordsTotal;
+	}
 
-		public int getiTotalDisplayRecords() {
-			return iTotalDisplayRecords;
-		}
+	public void setRecordsTotal(int recordsTotal) {
+		this.recordsTotal = recordsTotal;
+	}
 
-		public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
-			this.iTotalDisplayRecords = iTotalDisplayRecords;
-		}
+	public int getRecordsFiltered() {
+		return recordsFiltered;
+	}
 
-		public String getsEcho() {
-			return sEcho;
-		}
+	public void setRecordsFiltered(int recordsFiltered) {
+		this.recordsFiltered = recordsFiltered;
+	}
 
-		public void setsEcho(String sEcho) {
-			this.sEcho = sEcho;
-		}
+	public String getsEcho() {
+		return sEcho;
+	}
 
-		public String getsColumns() {
-			return sColumns;
-		}
+	public void setsEcho(String sEcho) {
+		this.sEcho = sEcho;
+	}
 
-		public void setsColumns(String sColumns) {
-			this.sColumns = sColumns;
-		}
+	public String getsColumns() {
+		return sColumns;
+	}
 
-		public List<Person> getAaData() {
-			return aaData;
-		}
+	public void setsColumns(String sColumns) {
+		this.sColumns = sColumns;
+	}
 
-		public void setAaData(List<Person> aaData) {
-			this.aaData = aaData;
-		}
+	public List<Person> getData() {
+		return data;
+	}
 
+	public void setData(List<Person> data) {
+		this.data = data;
+	}
 
 }
