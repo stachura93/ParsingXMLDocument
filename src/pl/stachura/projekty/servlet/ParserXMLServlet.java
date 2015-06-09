@@ -1,7 +1,7 @@
 package pl.stachura.projekty.servlet;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,158 +14,198 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.SAXException;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import pl.stachura.projekty.dao.PersonDAO;
 import pl.stachura.projekty.model.Person;
 import pl.stachura.projekty.service.JsonObjectTable;
 import pl.stachura.projekty.service.MD5;
-import pl.stachura.projekty.service.ReadXMLPersonSAX;
+import pl.stachura.projekty.service.InputStreamDocumentParser;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@WebServlet(urlPatterns = "/ParserXMLServlet", asyncSupported = false)
+
+/**
+ * This class represents XMLParser for Person object.
+ * Servlet receives the file which is parsed (DOCUMENT XML Standard) and copy to JSON.
+ * Persons list are there saved using JDBC connector to MySQL database.
+ * 
+ * @method doPost displays the page by using FREEMARKER templates and save to database
+ * @method doGet JSON document for dataTables(JS-JQuery).
+ * @author Stachura Bartlomiej
+ */
+@WebServlet(urlPatterns = "/ParserXMLServlet", asyncSupported = true)
 public class ParserXMLServlet extends HttpServlet {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private ArrayList<Person> personsList;
 
-	List<Person> personsList = new ArrayList<Person>();
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-
-		RequestDispatcher requestDispatcher = req
-				.getRequestDispatcher("WEB-INF/website/table.ftl");
-
-		requestDispatcher.forward(req, resp);
-
-		doPost(req, resp);
-
-	}
-
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		String sColumn = req.getParameter("iSortCol_0");
-		String iSortDir = req.getParameter("sSortDir_0");
-		String dir = "desc";
-
-		System.out.println(sColumn);
-		System.out.println(iSortDir);
-
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		SAXParser saxParser;
+		personsList = new ArrayList<Person>();
 
 		try {
-			saxParser = saxParserFactory.newSAXParser();
-			ReadXMLPersonSAX handler = new ReadXMLPersonSAX();
-			saxParser
-					.parse(new File(
-							"/Users/bartlomiejstachura/GitHub/Servlet-JDBC-JS---XML/test1.xml"),
-							handler);
-
-			// List<Person> personsList = handler.getPersonsList();
-			personsList = handler.getPersonsList();
-
-			// Person person1 = new Person();
-			// person1.setName("Pawel");
-			// person1.setSurname("Stachura");
-			// person1.setLogin("PlayPoleca");
-			// Person person2 = new Person();
-			// person2.setName("Bartlomiej");
-			// person2.setSurname("Stachura");
-			// person2.setLogin("mistrz");
-			// Person person3 = new Person();
-			// person3.setName("Grzesiek");
-			// person3.setSurname("Czachor");
-			// person3.setLogin("lama");
-			// personsList.add(person1);
-			// personsList.add(person3);
-			// personsList.add(person2);
-			//
-
-			if (sColumn != null) {
-				if (sColumn.equals("0")) {
-					if (iSortDir.equals(dir)) {
-						Collections.sort(personsList,
-								Collections.reverseOrder(new NameComparator()));
-					} else {
-						Collections.sort(personsList, new NameComparator());
+			List<FileItem> items = new ServletFileUpload(
+					new DiskFileItemFactory()).parseRequest(req);
+			for (FileItem item : items) {
+				if (item.isFormField()) {
+					// Process regular form field
+					// (type="text|radio|checkbox|etc", select, etc).
+					String fieldName = item.getFieldName();
+					String fieldValue = item.getString();
+				} else {
+					// Process form file field (input type="file")
+					String fieldName = item.getFieldName();
+					String fileName = FilenameUtils.getName(item.getName());
+					InputStream fileContent = item.getInputStream();
+					
+					// If user don't put a file
+					if (fileName == null || fileName.equals("")) {	
+						throw new ServletException("File Name can't be null or empty");
 					}
-				}
-				if (sColumn.equals("1")) {
-					if (iSortDir.equals(dir)) {
-						Collections.sort(personsList, Collections
-								.reverseOrder(new SurnameComparator()));
-					} else {
-						Collections.sort(personsList, new SurnameComparator());
-					}
-				}
-				if (sColumn.equals("2")) {
-					if (iSortDir.equals(dir)) {
-						Collections
-						.sort(personsList, Collections
-								.reverseOrder(new LoginComparator()));
-					} else {
-						Collections.sort(personsList, new LoginComparator());
+
+					// Convert InputStream file to Person type use java ducument
+					Document doc = InputStreamDocumentParser
+							.newDocumentFromInputStream(fileContent);
+					NodeList nodeList = doc.getElementsByTagName("user");
+
+					for (int itr = 0; itr < nodeList.getLength(); itr++) {
+
+						Person person = new Person();
+						Node node = nodeList.item(itr);
+
+						if (node.getNodeType() == Node.ELEMENT_NODE) {
+							Element eElement = (Element) node;
+
+							person.setName(eElement
+									.getElementsByTagName("name").item(0)
+									.getTextContent());
+							person.setSurname(eElement
+									.getElementsByTagName("surname").item(0)
+									.getTextContent());
+							person.setLogin(eElement
+									.getElementsByTagName("login").item(0)
+									.getTextContent());
+						}
+						personsList.add(person);
 					}
 				}
 			}
 
-//			ArrayList<Person> personsListMD5 = new ArrayList<Person>();
-//			for (Person person : personsList) {
-//				String security = (person.getSurname() + "_" + MD5.crypt(person
-//						.getName()));
-//				personsListMD5.add(new Person(person.getName(), security,
-//						person.getLogin()));
-//			}
-			
+		} catch (FileUploadException e) {
+			throw new ServletException("Cannot parse multipart request.", e);
+		}
+
+		RequestDispatcher requestDispatcher = req
+				.getRequestDispatcher("WEB-INF/website/table.ftl");
+		requestDispatcher.forward(req, resp);
+
+		// req.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+		// AsyncContext aCtx = req.startAsync(req, resp);
+		// aCtx.setTimeout(9000000);
+		// Executor executor = Executors.newSingleThreadExecutor();
+		// executor.execute(new MySqlTask(aCtx, personsList));
+
+		PersonDAO personDAO = new PersonDAO();
+		personDAO.doDelate();
+		personDAO.createTable();
+		personDAO.doInsertBatch(personsList);
+
+		doGet(req, resp);
+
+	}
 		
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String sColumn = req.getParameter("iSortCol_0");
+		String iSortDir = req.getParameter("sSortDir_0");
+		String dir = "desc";
 
-			JsonObjectTable jObjectTable = new JsonObjectTable();
-
-			//jObjectTable.setDraw(1);
-			jObjectTable.setRecordsTotal(personsList.size());
-			jObjectTable.setRecordsFiltered(personsList.size());
-			jObjectTable.setData(personsList);
-
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-			resp.setContentType("application/json");
-			PrintWriter out = resp.getWriter();
-			out.println(gson.toJson(jObjectTable));
-			System.out.println("gotowe");
-
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
+		// Add MD5 security code and return to new personsMD5 list
+		ArrayList<Person> personsMD5 = new ArrayList<Person>();
+		for (Person person : personsList) {
+			String security = (person.getSurname() + "_" + MD5.crypt(person
+					.getName()));
+			personsMD5.add(new Person(person.getName(), security, person
+					.getLogin()));
 		}
 
-	}
-
-	private class MySqlTask implements Runnable {
-
-		@Override
-		public void run() {
-			PersonDAO personDAO = new PersonDAO();
-			personDAO.doDelate();
-			personDAO.createTable();
-			// personDAO.doInsertBatch(personsList);
+		// Sorting Columns ASC/DESC
+		if (sColumn != null) {
+			if (sColumn.equals("0")) {
+				if (iSortDir.equals(dir)) {
+					Collections.sort(personsMD5,
+							Collections.reverseOrder(new NameComparator()));
+				} else {
+					Collections.sort(personsMD5, new NameComparator());
+				}
+			}
+			if (sColumn.equals("1")) {
+				if (iSortDir.equals(dir)) {
+					Collections.sort(personsMD5,
+							Collections.reverseOrder(new SurnameComparator()));
+				} else {
+					Collections.sort(personsMD5, new SurnameComparator());
+				}
+			}
+			if (sColumn.equals("2")) {
+				if (iSortDir.equals(dir)) {
+					Collections.sort(personsMD5,
+							Collections.reverseOrder(new LoginComparator()));
+				} else {
+					Collections.sort(personsMD5, new LoginComparator());
+				}
+			}
 		}
+
+		// Convert object java of scheme dataTables use type JSON
+		JsonObjectTable jObjectTable = new JsonObjectTable();
+		jObjectTable.setRecordsTotal(personsMD5.size());
+		jObjectTable.setRecordsFiltered(personsMD5.size());
+		jObjectTable.setData(personsMD5);
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		resp.setContentType("application/json");
+
+		PrintWriter out = resp.getWriter();
+		out.println(gson.toJson(jObjectTable));
 	}
 
-	public static class NameComparator implements Comparator<Person> {
+	// private class MySqlTask implements Runnable {
+	// AsyncContext aCtx;
+	// private List saveList;
+	//
+	// public MySqlTask(AsyncContext aCtx, List saveList) {
+	// this.aCtx = aCtx;
+	// this.saveList = saveList;
+	// }
+	//
+	// @Override
+	// public void run() {
+	// PersonDAO personDAO = new PersonDAO();
+	// personDAO.doDelate();
+	// personDAO.createTable();
+	// personDAO.doInsertBatch(saveList);
+	// }
+	// }
+
+	private static class NameComparator implements Comparator<Person> {
 
 		@Override
 		public int compare(Person person1, Person person2) {
@@ -179,7 +219,6 @@ public class ParserXMLServlet extends HttpServlet {
 				return o1.compareToIgnoreCase(o2);
 			}
 		}
-
 	}
 
 	private static class SurnameComparator implements Comparator<Person> {
@@ -198,7 +237,6 @@ public class ParserXMLServlet extends HttpServlet {
 				return o1.compareToIgnoreCase(o2);
 			}
 		}
-
 	}
 
 	private static class LoginComparator implements Comparator<Person> {
@@ -214,44 +252,7 @@ public class ParserXMLServlet extends HttpServlet {
 			} else {
 				return o1.compareToIgnoreCase(o2);
 			}
-
 		}
-
 	}
 
-	public static void main(String[] args) {
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		SAXParser saxParser;
-
-		try {
-			saxParser = saxParserFactory.newSAXParser();
-			ReadXMLPersonSAX handler = new ReadXMLPersonSAX();
-			saxParser
-					.parse(new File(
-							"/Users/bartlomiejstachura/GitHub/Servlet-JDBC-JS---XML/test1.xml"),
-							handler);
-
-			// List<Person> personsList = handler.getPersonsList();
-			ArrayList<Person> personsList = handler.getPersonsList();
-
-			ArrayList<Person> personsListMD5 = new ArrayList<Person>();
-			for (Person person : personsList) {
-				String security = (person.getSurname() + "_" + MD5.crypt(person
-						.getName()));
-				personsListMD5.add(new Person(person.getName(), security,
-						person.getLogin()));
-			}
-
-			Collections.sort(personsListMD5, Collections.reverseOrder(new LoginComparator()));
-
-			for (int j = 0; j < 5; j++) {
-				System.out.println(personsListMD5.get(j).getSurname());
-			}
-
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 }

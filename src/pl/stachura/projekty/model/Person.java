@@ -1,16 +1,30 @@
 package pl.stachura.projekty.model;
 
+/**
+ * This class represents the parameters of the Person
+ * 
+ * @author Stachura Bartlomiej
+ */
+public class Person {
 
-public class Person  {
-	
+	/**
+	 * The Person First Name
+	 */
 	private String name;
+
+	/**
+	 * The Person Last Name
+	 */
 	private String surname;
+
+	/**
+	 * The Person Login
+	 */
 	private String login;
-	
+
 	public Person() {
-		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Person(String name, String surname, String login) {
 		super();
 		this.name = name;
@@ -41,10 +55,11 @@ public class Person  {
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[name: " + name + ", surname: " + surname + ", login: " + login + "]";
+		return "[name: " + name + ", surname: " + surname + ", login: " + login
+				+ "]";
 	}
 
 }

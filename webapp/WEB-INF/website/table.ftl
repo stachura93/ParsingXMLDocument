@@ -7,7 +7,6 @@
 	<script type="text/javascript" src="js/script.js"></script>
 </head>
 <body>
-	<div id="table1" class="container" style="width:60em;">
 		<table id="example" class="display">
 			<thead> 
 				<tr>
@@ -17,6 +16,5 @@
 				</tr> 
 			</thead> 
 		</table>
-	</div>
 </body>
 </html>

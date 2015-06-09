@@ -4,13 +4,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import pl.stachura.projekty.model.DataTableParamModel;
 
+/**
+ * This class represent parameters for DataTable from the specified request
+ * 
+ * @author Stachura Bartlomiej
+ */
 public class DataTablesParamUtility {
 
 	/**
-	 * creates parameters for DataTable from the specified request
-	 * 
-	 * @param request
-	 *            the HttpServletRequest
+	 * Receiving all request
+	 * @param request the HttpServletRequest
 	 * @return the parameters for DataTable
 	 */
 	public static DataTableParamModel getParameters(HttpServletRequest request) {
@@ -25,16 +28,12 @@ public class DataTablesParamUtility {
 			parameters.sEcho = request.getParameter("sEcho");
 			parameters.sSearch = request.getParameter("sSearch");
 			parameters.sColumns = request.getParameter("sColumns");
-			parameters.iDisplayStart = Integer.parseInt(request
-					.getParameter("iDisplayStart"));
-			parameters.iDisplayLength = Integer.parseInt(request
-					.getParameter("iDisplayLength"));
-			parameters.iColumns = Integer.parseInt(request
-					.getParameter("iColumns"));
-			parameters.iSortingCols = Integer.parseInt(request
-					.getParameter("iSortingCols"));
-			parameters.iSortColumnIndex = Integer.parseInt(request
-					.getParameter("iSortCol_0"));
+			
+			parameters.iDisplayStart = Integer.parseInt(request.getParameter("iDisplayStart"));
+			parameters.iDisplayLength = Integer.parseInt(request.getParameter("iDisplayLength"));
+			parameters.iColumns = Integer.parseInt(request.getParameter("iColumns"));
+			parameters.iSortingCols = Integer.parseInt(request.getParameter("iSortingCols"));
+			parameters.iSortColumnIndex = Integer.parseInt(request.getParameter("iSortCol_0"));
 			parameters.sSortDirection = request.getParameter("sSortDir_0");
 		}
 

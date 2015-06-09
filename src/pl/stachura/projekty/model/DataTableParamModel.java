@@ -1,54 +1,54 @@
 package pl.stachura.projekty.model;
 
+/**
+ * This class represents the parameters of the jQuery DataTable
+ * 
+ * @author Stachura Bartlomiej
+ */
+public class DataTableParamModel {
+
 	/**
-	 * This class represents the parameters of the jQuery DataTable
-	 * 
+	 * The request sequence number sent by DataTable
 	 */
-	public class DataTableParamModel {
+	public String sEcho;
 
-	        /**
-	         * the request sequence number sent by DataTable
-	         */
-	        public String sEcho;
+	/**
+	 * The searchText
+	 */
+	public String sSearch;
 
-	        /**
-	         * the searchText
-	         */
-	        public String sSearch;
+	/**
+	 * The number of entries shown in the table
+	 */
+	public int iDisplayLength;
 
-	        /**
-	         * the number of entries shown in the table
-	         */
-	        public int iDisplayLength;
+	/**
+	 * The first entry to be shown (used for paging)
+	 */
+	public int iDisplayStart;
 
-	        /**
-	         * the first entry to be shown (used for paging)
-	         */
-	        public int iDisplayStart;
+	/**
+	 * The number of columns
+	 */
+	public int iColumns;
 
-	        /**
-	         * the number of columns
-	         */
-	        public int iColumns;
+	/**
+	 * The number of columns used in sorting
+	 */
+	public int iSortingCols;
 
-	        /**
-	         * the number of columns used in sorting
-	         */
-	        public int iSortingCols;
+	/**
+	 * The index of the column currently sorted
+	 */
+	public int iSortColumnIndex;
 
-	        /**
-	         * the index of the column currently sorted
-	         */
-	        public int iSortColumnIndex;
+	/**
+	 * The sorting direction ("asc" or desc")
+	 */
+	public String sSortDirection;
 
-	        /**
-	         * the sorting direction ("asc" or desc")
-	         */
-	        public String sSortDirection;
-
-	        /**
-	         * list of column names (seperated with a comma)
-	         */
-	        public String sColumns;
+	/**
+	 * List of column names (seperated with a comma)
+	 */
+	public String sColumns;
 }
-
