@@ -1,0 +1,17 @@
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"> test1.xml
+
+a=0
+echo "<users>" >> test1.xml
+while [ $a -lt 50000 ] 
+do 
+	echo "
+			<user>
+				<name>name$a</name>
+				<surname>surname$a</surname>
+				<login>login$a</login>
+			</user>
+	" >> test1.xml
+	a=`expr $a + 1`
+done
+echo "</users>" >> test1.xml
+
