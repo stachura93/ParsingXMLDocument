@@ -9,19 +9,23 @@
 <body>	
 	<div id="row">	
 		<div class="col-md-8">
-	
 		</div>
   		<div class="col-md-4">
 			<form class="form-inline" id="ParserXML" action="ParserXMLServlet" method="POST" enctype="multipart/form-data">		
-	  			<div class="form-group">
-	  				<label>Plik XML</label> 				
-					<input class="form-control" id="uploadFile" placeholder="Choose File" disabled="disabled" />
+	  			<div class="form-group"> 				
+					<input class="form-control" id="uploadFile" placeholder="choose xml file" disabled="disabled" />
 	  			</div>
-		<div class="fileUpload btn btn-primary">
-	 		<input id="uploadBtn" type="file" name="xmlFile" accept="text/xml" class="upload">Upload</button>
-	 	<div>
-			</form>
-		</div>		
+				<div class="fileUpload btn btn-primary">
+	 				<input id="uploadBtn" type="file" name="xmlFile" accept="text/xml" class="upload">Load</button> 		
+	 			<div>
+		</div>
 	</div>
+		<button type="submit" form="ParserXML" class="btn btn-default">Submit</button>
+	</form>
+	<script type="text/javascript">
+		document.getElementById("uploadBtn").onchange = function () {
+			document.getElementById("uploadFile").value = this.value;
+		};
+	</script>
 </body>
 </html>

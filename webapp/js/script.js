@@ -1,6 +1,7 @@
 function sayInformationAboutAuthor() {
 	alert("author: Stachura Bartlomiej")
 }
+
 //Plug-in to fetch page data 
 jQuery.fn.dataTableExt.oApi.fnPagingInfo = function ( oSettings )
 {
@@ -19,30 +20,30 @@ jQuery.fn.dataTableExt.oApi.fnPagingInfo = function ( oSettings )
 
 $(document).ready(function() {
 
-$("#example").dataTable( {
-    "bProcessing": true,
-    "bServerSide": true,
-    "bFilter": false,
-    
-    //bStateSave variable you can use to save state on client cookies: set value "true" 
-    "bStateSave": false,
-    //Default: Page display length
-    "bLengthChange": false,
-   
-    "bPaginate": false,
-    
-    "bScrollInfinite": true,
-    "bScrollCollapse": true,
-    "sScrollY": "350px",
-         
-    "sAjaxSource": "ParserXMLServlet",
-    "sServerMethod": "GET",
-    "aoColumns": [
-        { "mData": "name" },
-        { "mData": "surname" },
-        { "mData": "login" },
-         
-    ]
-} );
+	$("#example").dataTable( {
+	    "bProcessing": true,
+	    "bServerSide": true,
+	    "bFilter": false,
+	    
+	    //bStateSave variable you can use to save state on client cookies: set value "true" 
+	    "bStateSave": false,
+	    //Default: Page display length
+	    "bLengthChange": false,
+	   
+	    "bPaginate": false,
+	    
+	    "bScrollInfinite": true,
+	    "bScrollCollapse": true,
+	    "sScrollY": "350px",
+	         
+	    "sAjaxSource": "ParserXMLServlet",
+	    "sServerMethod": "GET",
+	    "aoColumns": [
+	        { "mData": "name" },
+	        { "mData": "surname" },
+	        { "mData": "login" },
+	         
+	    ]
+	} );
 
 } );

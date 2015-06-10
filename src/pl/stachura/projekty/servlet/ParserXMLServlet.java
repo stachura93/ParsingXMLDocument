@@ -66,11 +66,8 @@ public class ParserXMLServlet extends HttpServlet {
 				if (item.isFormField()) {
 					// Process regular form field
 					// (type="text|radio|checkbox|etc", select, etc).
-					String fieldName = item.getFieldName();
-					String fieldValue = item.getString();
 				} else {
 					// Process form file field (input type="file")
-					String fieldName = item.getFieldName();
 					String fileName = FilenameUtils.getName(item.getName());
 					InputStream fileContent = item.getInputStream();
 					
