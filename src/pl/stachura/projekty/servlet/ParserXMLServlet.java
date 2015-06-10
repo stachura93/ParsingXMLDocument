@@ -112,19 +112,12 @@ public class ParserXMLServlet extends HttpServlet {
 				.getRequestDispatcher("WEB-INF/website/table.ftl");
 		requestDispatcher.forward(req, resp);
 
-		// req.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
-		// AsyncContext aCtx = req.startAsync(req, resp);
-		// aCtx.setTimeout(9000000);
-		// Executor executor = Executors.newSingleThreadExecutor();
-		// executor.execute(new MySqlTask(aCtx, personsList));
-
 		PersonDAO personDAO = new PersonDAO();
 		personDAO.doDelate();
 		personDAO.createTable();
 		personDAO.doInsertBatch(personsList);
 
 		doGet(req, resp);
-
 	}
 		
 	@Override
@@ -184,23 +177,6 @@ public class ParserXMLServlet extends HttpServlet {
 		out.println(gson.toJson(jObjectTable));
 	}
 
-	// private class MySqlTask implements Runnable {
-	// AsyncContext aCtx;
-	// private List saveList;
-	//
-	// public MySqlTask(AsyncContext aCtx, List saveList) {
-	// this.aCtx = aCtx;
-	// this.saveList = saveList;
-	// }
-	//
-	// @Override
-	// public void run() {
-	// PersonDAO personDAO = new PersonDAO();
-	// personDAO.doDelate();
-	// personDAO.createTable();
-	// personDAO.doInsertBatch(saveList);
-	// }
-	// }
 
 	private static class NameComparator implements Comparator<Person> {
 
